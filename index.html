@@ -2,21 +2,21 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>QR Code Résident</title>
+<title>EHPAD - Gestion QR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   font-family: Arial;
   background:#f4f6f8;
+  padding:30px;
   text-align:center;
-  padding:40px;
 }
-.box{
+.card{
   background:white;
   padding:25px;
   border-radius:12px;
-  max-width:420px;
+  max-width:500px;
   margin:auto;
 }
 input,button{
@@ -32,42 +32,69 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-canvas{
-  margin-top:20px;
+.resident{
+  background:#eef2f7;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
 }
 </style>
 </head>
 
 <body>
-<div class="box">
-<h2>🧦 QR Code Résident</h2>
+<div class="card">
+<h2>🧦 Gestion Résidents</h2>
 
 <input id="nom" placeholder="Nom du résident">
 <input id="chambre" placeholder="Chambre">
 
-<button onclick="generateQR()">Générer</button>
+<button onclick="ajouterResident()">Ajouter et générer QR</button>
 
-<div id="qrcode"></div>
+<div id="liste"></div>
 </div>
 
 <script>
-function generateQR(){
+let residents = JSON.parse(localStorage.getItem("residents") || "[]");
+
+function sauvegarder(){
+  localStorage.setItem("residents", JSON.stringify(residents));
+}
+
+function ajouterResident(){
   const nom = document.getElementById("nom").value.trim();
   const chambre = document.getElementById("chambre").value.trim();
 
   if(!nom || !chambre){
-    alert("Remplis le nom et la chambre");
+    alert("Nom et chambre obligatoires");
     return;
   }
 
-  const data = "Résident: " + nom + " | Chambre: " + chambre;
+  const id = Date.now();
 
-  // Génération QR simple sans librairie externe
-  const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(data);
-
-  document.getElementById("qrcode").innerHTML =
-    '<img src="' + qrUrl + '" alt="QR Code">';
+  residents.push({id, nom, chambre});
+  sauvegarder();
+  afficher();
 }
+
+function afficher(){
+  const div = document.getElementById("liste");
+  div.innerHTML = "";
+
+  residents.forEach(r=>{
+    const url = "https://sachacoco15-eng.github.io/ehpad-qr/fiche.html?id=" + r.id;
+    const qr = "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=" + encodeURIComponent(url);
+
+    div.innerHTML += `
+      <div class="resident">
+        <b>${r.nom}</b> — chambre ${r.chambre}<br>
+        <img src="${qr}"><br>
+        <small>Scanner pour voir la fiche</small>
+      </div>
+    `;
+  });
+}
+
+afficher();
 </script>
 
 </body>
