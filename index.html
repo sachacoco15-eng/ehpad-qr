@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>QR Code Résident</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family: Arial;
+  background:#f4f6f8;
+  text-align:center;
+  padding:40px;
+}
+.box{
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  max-width:420px;
+  margin:auto;
+}
+input,button{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+button{
+  background:#2e7d32;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+canvas{
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+<div class="box">
+<h2>🧦 QR Code Résident</h2>
+
+<input id="nom" placeholder="Nom du résident">
+<input id="chambre" placeholder="Chambre">
+
+<button onclick="generateQR()">Générer</button>
+
+<div id="qrcode"></div>
+</div>
+
+<script>
+function generateQR(){
+  const nom = document.getElementById("nom").value.trim();
+  const chambre = document.getElementById("chambre").value.trim();
+
+  if(!nom || !chambre){
+    alert("Remplis le nom et la chambre");
+    return;
+  }
+
+  const data = "Résident: " + nom + " | Chambre: " + chambre;
+
+  // Génération QR simple sans librairie externe
+  const qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(data);
+
+  document.getElementById("qrcode").innerHTML =
+    '<img src="' + qrUrl + '" alt="QR Code">';
+}
+</script>
+
+</body>
+</html>
+
