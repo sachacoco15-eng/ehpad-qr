@@ -81,7 +81,11 @@ function afficher(){
   div.innerHTML = "";
 
   residents.forEach(r=>{
-    const url = "https://sachacoco15-eng.github.io/ehpad-qr/fiche.html?id=" + r.id;
+   const url =
+  "https://sachacoco15-eng.github.io/ehpad-qr/fiche.html?nom=" +
+  encodeURIComponent(r.nom) +
+  "&chambre=" +
+  encodeURIComponent(r.chambre);
     const qr = "https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=" + encodeURIComponent(url);
 
     div.innerHTML += `
@@ -99,4 +103,5 @@ afficher();
 
 </body>
 </html>
+
 
