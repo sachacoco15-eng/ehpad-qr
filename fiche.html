@@ -1,51 +1,18 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Fiche résident</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body{
-  font-family: Arial;
-  background:#f4f6f8;
-  padding:30px;
-  text-align:center;
-}
-.card{
-  background:white;
-  padding:25px;
-  border-radius:12px;
-  max-width:400px;
-  margin:auto;
-}
-</style>
-</head>
-
-<body>
-<div class="card">
-<h2>👵 Fiche résident</h2>
-<div id="info">Chargement...</div>
-</div>
-
 <script>
 const params = new URLSearchParams(location.search);
-const id = Number(params.get("id"));
 
-const residents = JSON.parse(localStorage.getItem("residents") || "[]");
-const r = residents.find(x=>x.id===id);
+const nom = params.get("nom");
+const chambre = params.get("chambre");
 
 const info = document.getElementById("info");
 
-if(!r){
+if (!nom || !chambre) {
   info.innerHTML = "Résident introuvable";
-}else{
+} else {
   info.innerHTML = `
-    <b>Nom :</b> ${r.nom}<br>
-    <b>Chambre :</b> ${r.chambre}
+    <b>Nom :</b> ${nom}<br>
+    <b>Chambre :</b> ${chambre}
   `;
 }
 </script>
-
-</body>
 </html>
